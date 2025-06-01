@@ -1,7 +1,6 @@
 const seatMap = document.getElementById('seat-map');
 const bookBtn = document.getElementById('book-btn');
 const totalSeats = 34;
-const apiBase = 'https://library-backend-r2qu.onrender.com'; // ✅ Your deployed backend
 
 function renderSeats(bookedSeats) {
   seatMap.innerHTML = '';
@@ -26,14 +25,13 @@ function renderSeats(bookedSeats) {
   }
 }
 
-// Load booked seats from backend
 async function loadBookedSeats() {
   const date = document.getElementById('date').value;
   const shift = document.getElementById('shift').value;
   if (!date || !shift) return;
 
   try {
-    const res = await fetch(`${apiBase}/api/bookings?date=${date}&shift=${shift}`);
+    const res = await fetch(`https://library-backend-r2qu.onrender.com/api/bookings?date=${date}&shift=${shift}`);
     const data = await res.json();
     renderSeats(data);
   } catch (err) {
@@ -42,7 +40,6 @@ async function loadBookedSeats() {
   }
 }
 
-// Handle booking
 bookBtn.addEventListener('click', async () => {
   const selectedSeats = [...document.querySelectorAll('.seat.selected')].map(seat => seat.dataset.seatId);
   const date = document.getElementById('date').value;
@@ -54,11 +51,9 @@ bookBtn.addEventListener('click', async () => {
   }
 
   try {
-    const res = await fetch(`${apiBase}/api/book`, {
+    const res = await fetch('https://library-backend-r2qu.onrender.com/api/book', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ date, shift, seats: selectedSeats })
     });
 
@@ -66,9 +61,9 @@ bookBtn.addEventListener('click', async () => {
 
     if (res.ok) {
       alert('✅ Seats booked successfully!');
-      loadBookedSeats(); // Refresh UI
+      loadBookedSeats();
     } else {
-      alert('❌ Some seats already booked: ' + result.alreadyBooked.join(', '));
+      alert('❌ ' + result.message + ': ' + result.alreadyBooked.join(', '));
       loadBookedSeats();
     }
   } catch (err) {
@@ -77,6 +72,26 @@ bookBtn.addEventListener('click', async () => {
   }
 });
 
-// Reload seats when date or shift changes
-document.getElementById('date').addEventListener('change', loadBookedSeats);
+document.getElementById('date').addEventListener('change', () => {
+  loadBookedSeats();
+  updateEndDate();
+});
+
 document.getElementById('shift').addEventListener('change', loadBookedSeats);
+
+// Membership end date auto-calculate
+const membership = document.getElementById('membership');
+const startDate = document.getElementById('date');
+const endDate = document.getElementById('end-date');
+
+function updateEndDate() {
+  const start = new Date(startDate.value);
+  const months = parseInt(membership.value);
+  if (!isNaN(start.getTime()) && months) {
+    const end = new Date(start);
+    end.setMonth(end.getMonth() + months);
+    endDate.value = end.toISOString().split('T')[0];
+  }
+}
+
+membership.addEventListener('change', updateEndDate);
