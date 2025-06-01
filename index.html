@@ -9,8 +9,18 @@
 <body>
   <h1>Library Seat Booking</h1>
 
-  <label for="date">Select Date:</label>
+  <label for="date">Start Date:</label>
   <input type="date" id="date" />
+
+  <label for="membership">Membership Duration:</label>
+  <select id="membership">
+    <option value="1">1 Month</option>
+    <option value="2">2 Months</option>
+    <option value="3">3 Months</option>
+  </select>
+
+  <label for="end-date">End Date:</label>
+  <input type="date" id="end-date" readonly />
 
   <label for="shift">Select Shift:</label>
   <select id="shift">
