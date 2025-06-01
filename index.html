@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Library Seat Booking</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h1>Library Seat Booking</h1>
+
+  <label for="date">Select Date:</label>
+  <input type="date" id="date" />
+
+  <label for="shift">Select Shift:</label>
+  <select id="shift">
+    <option value="full">Full Day (6AM - 10PM)</option>
+    <option value="am">Morning (6AM - 2PM)</option>
+    <option value="pm">Evening (2PM - 10PM)</option>
+  </select>
+
+  <div id="seat-map" class="seat-map"></div>
+
+  <button id="book-btn">Book Selected Seats</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
